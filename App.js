@@ -22,6 +22,7 @@ const App = () => {
         <View>
           <Text>New AwesomeProject</Text>
         </View>
+        
     </SafeAreaView>
   );
 }

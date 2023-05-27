@@ -6,32 +6,27 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import SearchBar from './src/app/shared/components/searchBar';
 
 const App = () => {
- console.log('first console log in AwesomeProject!')
+  console.log('first console log in AwesomeProject!');
 
   return (
     <SafeAreaView style={styles.Container}>
-        <View>
-          <Text>New AwesomeProject</Text>
-        </View>
-        
+      <Text>New AwesomeProject</Text>
+      <SearchBar />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 15,
   },
 });
 

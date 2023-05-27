@@ -1,119 +1,96 @@
-// import { useEffect, useRef, useState } from "react";
-// import {
-//   Container,
-//   SearchInput,
-//   IconRightArrow,
-//   IconMagnifyingGlass
-// } from "./styles";
+import React, {useState, useRef} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Animated,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 
-// function Search() {
-//   const targetRef = useRef(null);
-//   const [isHovered, setIsHovered] = useState(false);
-//   const [isFocused, setIsFocused] = useState(false);
-//   const showSearchInput = isHovered || isFocused;
+const SearchBar = () => {
+  const [isExpanded, setExpanded] = useState(false);
+  const searchBarWidth = useRef(new Animated.Value(0)).current;
+  const recentSearchesHeight = useRef(new Animated.Value(0)).current;
 
-//   useEffect(() => {
-//     targetRef.current.value = "";
-//   }, [showSearchInput]);
+  const toggleSearchBar = () => {
+    const width = isExpanded ? 0 : 300; // Set the desired expanded width for the search bar
+    const height = isExpanded ? 0 : 200; // Set the desired expanded height for the recent searches
 
-//   return (
-//     <Container
-//       onMouseEnter={() => setIsHovered(true)}
-//       onMouseLeave={() => setIsHovered(false)}
-//       onFocus={() => setIsFocused(true)}
-//       onBlur={() => setIsFocused(false)}
-//       hover={showSearchInput}
-//     >
-//       <SearchInput ref={targetRef} showSearchInput={showSearchInput} />
-//       {showSearchInput ? <IconRightArrow /> : <IconMagnifyingGlass />}
-//     </Container>
-//   );
-// }
+    Animated.parallel([
+      Animated.timing(searchBarWidth, {
+        toValue: width,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+      Animated.timing(recentSearchesHeight, {
+        toValue: height,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+    ]).start();
 
-// export default Search;
+    setExpanded(!isExpanded);
+  };
 
-// import styled, { css, keyframes } from "styled-components";
-// import SearchIcon from "../icons/search";
-// import ArrowRightIcon from "../icons/arrowRight";
+  return (
+    <View style={styles.container}>
+      <View style={styles.buttonInputContainer}>
+        <TouchableOpacity onPress={toggleSearchBar}>
+          {/* Add your search icon */}
+          <Text style={{paddingHorizontal: 15}}>S</Text>
+        </TouchableOpacity>
+        <Animated.View style={[styles.searchBar, {width: searchBarWidth}]}>
+          <TextInput
+            style={styles.input}
+            placeholder="Search"
+            // Add necessary props and event handlers for search functionality
+          />
+        </Animated.View>
+      </View>
+      <Animated.View
+        style={[styles.recentSearches, {height: recentSearchesHeight}]}>
+        {/* Add your recent searches component */}
+        <Text>This is where the recet searches will go</Text>
+      </Animated.View>
+    </View>
+  );
+};
 
-// export const Container = styled.div`
-//   position: relative;
-//   width: 50px;
-//   height: 50px;
-//   box-sizing: border-box;
-//   border-radius: 50px;
-//   border: 4px solid #393e46;
-//   padding: 5px;
-//   background: #222831;
-//   transition: all 0.5s;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    width: '95%',
+  },
+  buttonInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    //paddingLeft: 10,
+    backgroundColor: 'blue',
+    borderRadius: 50,
+  },
+  searchBar: {
+    // flex: 1,
+    // marginLeft: 10,
+    overflow: 'hidden',
+  },
+  input: {
+    //backgroundColor: 'red',
+    borderRadius: 5,
+    padding: 10,
+    //marginLeft: 10,
+  },
+  recentSearches: {
+    marginTop: 10,
+    width: '100%',
+    backgroundColor: '#f5f5f5',
+    overflow: 'hidden',
+  },
+});
 
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   flex-direction: column;
-
-//   ${({ hover }) =>
-//     hover &&
-//     css`
-//       width: 50%;
-//       -webkit-box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.74);
-//       box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.74);
-//       border: 4px solid #00adb5;
-
-//       @media (min-width: 768px) {
-//         width: 80%;
-//       }
-//     `}
-// `;
-
-// export const SearchInput = styled.input`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 42px;
-//   line-height: 30px;
-//   outline: 0;
-//   border: 0;
-//   font-size: 2rem;
-//   border-radius: 20px;
-//   padding: 0 20px;
-//   margin: 0;
-//   -moz-appearance: none;
-//   -webkit-appearance: none;
-//   appearance: none;
-
-//   display: ${(props) => (props.showSearchInput ? "block" : "none")};
-// `;
-
-// /** icons */
-// const fadeIn = keyframes`
-//   from {
-//     opacity: 0;
-//   }
-
-//   to {
-//     opacity: 1;
-//   }
-// `;
-
-// const IconCommonCss = css`
-//   height: 1.25rem;
-//   width: 1.25rem;
-//   fill: #00adb5;
-//   z-index: 10;
-//   animation: ${fadeIn} 1s linear;
-// `;
-
-// export const IconMagnifyingGlass = styled(SearchIcon)`
-//   ${IconCommonCss}
-// `;
-
-// export const IconRightArrow = styled(ArrowRightIcon)`
-//   ${IconCommonCss}
-//   align-self: flex-end;
-//   cursor: pointer;
-//   &:hover {
-//     fill: #393e46;
-//   }
-// `;
+export default SearchBar;
